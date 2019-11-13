@@ -4,7 +4,7 @@ apt-get install -y subversion
 /usr/sbin/useradd -m -u 1536 judge
 cd /home/judge/
 
-svn co https://github.com/zhblue/hustoj/trunk/trunk/  src
+svn co https://github.com/1095813533/ACM/tree/master/trunk/install src
 apt-get install -y make flex g++ clang libmysqlclient-dev libmysql++-dev php-fpm php-common php-xml-parser nginx mysql-server php-mysql php-gd php-zip fp-compiler openjdk-8-jdk mono-devel php-mbstring php-xml
 apt-get install -y php-memcache memcached
 USER=`cat /etc/mysql/debian.cnf |grep user|head -1|awk  '{print $3}'`
