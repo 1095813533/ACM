@@ -1,0 +1,44 @@
+
+
+VMware实习生小V酷爱数学，有一天她在数学书上看到了这样一道题：√x + √y = √8 ，她很快解决了这个问题。
+现在，她在思考，对于更一般的情况，存在多少本质不同的整数解：
+√x_1 + √x_2 + √x_3 + ... + √x_n = √m 
+答案对998244353取模。两组解本质不同当且仅当一组解无法通过交换变量的取值变成另一组。
+输入描述:
+两个整数 n,m (n≤1000,m≤1000,000)
+输出描述:
+输出本质不同的解数，答案对998244353取模
+示例1
+输入
+复制
+2 8
+输出
+复制
+2
+说明
+只有两组本质不同的解，x_1=0,x_2=8和x_1=2,x_2=2x 
+
+AC代码
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const ll mod = 998244353;
+const int maxn = 1005;
+ll dp[maxn][maxn];
+ll f(ll n, ll m){  
+    dp[0][0] = 1;
+    for (int i = 1; i <= n; ++i)
+        for (int j = 0; j <= m; ++j)
+            if (j >= i)  dp[i][j] = (dp[i][j - i] + dp[i - 1][j]) % mod;
+            else dp[i][j] = dp[j][j];
+    return dp[n][m];
+}
+int main() {
+    int n, m;
+    cin >> n >> m;
+    ll a = 1;
+    for(ll i=2;i*i<=m;++i)
+        while(m%(i*i)==0)a*=i,m/=(i*i);
+    cout << f(n,a) << endl;
+    return 0;
+}

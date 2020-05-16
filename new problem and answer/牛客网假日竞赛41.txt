@@ -1,0 +1,224 @@
+链接：https://ac.nowcoder.com/acm/contest/5208/L
+来源：牛客网
+
+L. Breed Proximity
+题目描述 
+Farmer John's N cows (1 <= N <= 50,000) are standing in a line, each described by an integer breed ID. 
+Cows of the same breed are at risk for getting into an argument with each-other if they are standing too close. Specifically, two cows of the same breed are said to be "crowded" if their positions within the line differ by no more than K (1 <= K < N). 
+ Please compute the maximum breed ID of a pair of crowded cows.
+输入描述:
+* Line 1: Two space-separated integers: N and K.
+
+* Lines 2..1+N: Each line contains the breed ID of a single cow in the
+line.  All breed IDs are integers in the range 0..1,000,000.
+输出描述:
+* Line 1: The maximum breed ID of a crowded pair of cows, or -1 if
+there is no crowded pair of cows.
+示例1
+输入
+6 3
+7
+3
+4
+2
+3
+4
+输出
+4
+说明
+INPUT DETAILS:
+There are 6 cows standing in a line, with breed IDs 7, 3, 4, 2, 3, and 4.
+Two cows of equal breed IDs are considered crowded if their positions
+differ by at most 3.
+
+OUTPUT DETAILS:
+The pair of cows with breed ID 3 is crowded, as is the pair of cows with
+breed ID 4.
+
+AC代码
+#include <bits/stdc++.h>
+using namespace std;
+const int maxn = 50005;
+struct cow{
+    int num,pos;
+}cows[maxn];
+
+bool cmp(cow a,cow b){
+    if(a.num != b.num){
+        return a.num < b.num;
+    }
+    else{
+        return a.pos < b.pos;
+    }
+}
+
+int main()
+{
+    int N,K;
+    scanf("%d %d",&N,&K);
+    for(int i = 1; i <= N; i++){
+        scanf("%d",&cows[i].num);
+        cows[i].pos = i;
+    }
+    sort(cows+1,cows+1+N,cmp);
+    int ans = -1;
+    for(int i = 1; i <= N; i++){
+        if(cows[i].num == cows[i-1].num && (cows[i].pos - cows[i-1].pos) <= K && cows[i].num > ans){
+            ans = cows[i].num;
+        }
+    }
+    printf("%d\n",ans);
+    return 0;
+}
+
+
+链接：https://ac.nowcoder.com/acm/contest/5208/B
+来源：牛客网
+
+题目描述 
+FJ wants to take pictures of his N cows (2 <= N <= 1,000,000,000), which are standing in a line and conveniently numbered 1..N. Each photograph can capture a consecutive range of cows from the lineup, and FJ wants to make sure that each cow appears in at least one photo. 
+ Unfortunately, there are K unfriendly pairs of cows (1 <= K <= 1000) that each refuse to be in the same photograph. Given the locations of these unfriendly pairs, please determine the minimum number of photos FJ needs to take.
+输入描述:
+* Line 1: Two space-separated integers, N and K.
+
+* Lines 2..K+1: Line i+1 contains two integers, A_i and B_i, stating
+that the cows in positions A_i and B_i are unfriendly and
+therefore cannot be in the same photograph.
+输出描述:
+* Line 1: A single integer, specifying the minimum number of photos FJ
+needs to take.
+示例1
+输入
+复制
+7 3
+1 3
+2 4
+5 6
+输出
+复制
+3
+说明
+OUTPUT DETAILS:
+FJ can take 3 photos:
+- One ranging from 1 to 2.
+- One ranging from 3 to 5.
+- One ranging from 6 to 7.
+
+AC代码
+#include <bits/stdc++.h>
+using namespace std;
+struct node{
+	int l;//左端点
+	int r;//右端点
+}q[1005];
+bool cmp(struct node A,struct node B){
+	if(A.r != B.r ) return A.r < B.r ;
+	return A.l > B.l ;
+}
+int main()
+{
+	int n, k, a, b;
+	scanf("%d %d",&n,&k);
+	for(int i = 1;i <= k; ++i){
+		scanf("%d %d",&a,&b);
+		if(a > b){
+            swap(a,b);
+        }
+		q[i].l = a;
+		q[i].r = b ;
+	}
+	sort(q+1, q+1+k, cmp);
+	int ans = 1;
+	int pos = -1;
+	for(int i = 1; i <= k; ++i){
+		if(q[i].l >pos){
+			pos  = q[i].r ;
+			ans++;
+		}
+	}
+	printf("%d\n",ans);
+	return 0;
+}
+
+
+
+题目描述 
+Farmer John's N cows (1 <= N <= 50,000) are grazing along a one-dimensional fence. Cow i is standing at location x(i) and has height h(i) (1 <= x(i),h(i) <= 1,000,000,000). 
+ A cow feels "crowded" if there is another cow at least twice her height within distance D on her left, and also another cow at least twice her height within distance D on her right (1 <= D <= 1,000,000,000). Since crowded cows produce less milk, Farmer John would like to count the number of such cows. Please help him.
+输入描述:
+* Line 1: Two integers, N and D.
+
+* Lines 2..1+N: Line i+1 contains the integers x(i) and h(i).  The
+locations of all N cows are distinct.
+输出描述:
+* Line 1: The number of crowded cows.
+示例1
+输入
+复制
+6 4
+10 3
+6 2
+5 3
+9 7
+3 6
+11 2
+输出
+复制
+2
+说明
+INPUT DETAILS:
+There are 6 cows, with a distance threshold of 4 for feeling crowded.  Cow
+#1 lives at position x=10 and has height h=3, and so on.
+
+OUTPUT DETAILS:
+The cows at positions x=5 and x=6 are both crowded.
+
+AC代码
+#include<bits/stdc++.h>
+#define int long long
+using namespace std;
+int n, ans, q1[50001], q2[50001], l1, r1, l2, r2, d, t;
+struct node{
+    int x,y;
+}a[50001];
+bool cmp(node x,node y){
+    return x.x<y.x;
+}
+signed main()
+{
+    scanf("%lld %lld",&n,&d);
+    for(int i = 1; i <= n; ++i)
+    scanf("%lld %lld",&a[i].x,&a[i].y);
+    sort(a+1,a+n+1,cmp);
+    l1 = l2 = 1;
+    r1 = r2 = t =0;
+    for(int i = 1; i <= n; ++i)
+    {
+        r1++;
+        q1[r1]=i;
+        while(a[q1[l1]].x < a[i].x-d)
+        l1++;
+        while(l1<r1 && a[q1[r1]].y>a[q1[r1-1]].y)
+        {
+            q1[r1-1]=q1[r1];
+            r1--;
+        }
+        while(q2[l2] < i&&l2<=r2)
+        l2++;
+        while(t<n && a[t+1].x <= a[i].x+d)
+        {
+            t++;
+            r2++;
+            q2[r2] = t;
+            while(l2<r2 && a[q2[r2]].y > a[q2[r2-1]].y)
+            {
+                q2[r2-1] = q2[r2];
+                r2--;
+            }
+        }
+        if(a[q1[l1]].y >= a[i].y*2 && a[q2[l2]].y >= a[i].y*2)
+        ans++;
+    }
+    printf("%lld\n",ans);
+    return 0;
+}
