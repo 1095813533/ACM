@@ -1,0 +1,164 @@
+Jhadgre的伤心地
+题目描述 
+Jhadgre为了他的女神，准备了一场盛大的告白，可惜却被女神毫不留情的拒绝。于是Jhadgre决定离开这个伤心之地。但是钱都被Jhadgre拿去准备告白了，剩下的钱并不够他买车票，只够他坐公交车。
+
+Jhadgre所在城市的所有公交车站总体来说都在一条直线上，在这里有两种公交车，一种是全城公交，这种公交车在城市的任何一站都可以上下车，付了车费后，从当前站开始，最多可以向后坐5站（即从第i站上车，可以选择在第i+1,i+2,i+3,i+4,i+5站下车）。还有一种是区间公交，也就是可以在第X站上车，直到第Y站(X<Y)，中途每一站都可以下车但不可以上车。所有公交车的上车费都是2元。
+
+现在Jhadgre为了最快的逃离这个伤心地，他决定不管上哪种公交车，只要上去了，就一定坐到底再下车，中途不会下车，并且他现在所在的地点为第1站，他认为要到第N站以后的站，他才算彻底逃离这个伤心地。
+
+现在Jhadgre想知道他手里的钱够不够逃离这个伤心地，你可以帮他计算一下他最少需要花多少钱才能离开这个伤心地吗？
+
+输入描述:
+只包含一组数据。
+第一行一个整数N，意义如题（10<=N<=100）
+接下去一行中共N个整数a1,a2,a3...aN，由空格隔开,ai表示第i站的区间公交能到达第ai站，保证(i<ai)
+输出描述:
+Jhadgre最少需要花的钱
+示例1
+输入
+复制
+10
+7 11 4 5 6 7 8 9 10 11
+输出
+复制
+4
+说明
+以下给出两种乘车方案：
+
+(1) Jhadgre在第1站选择上全城公交，到达第6站，付2元钱，接着在第6站选择上全城公交，到达第11站，共付4元钱。
+
+(2) Jhadgre在第1站选择上区间公交，到达第7站，付2元钱，接着在第7站选择上全城公交，到达第12站，共付4元钱。
+
+AC代码
+#include <bits/stdc++.h>
+using namespace std;
+int a[101];
+int N;
+int F(int n)
+{
+	int min = 0;
+	if(n>N) return 0;
+	else
+		min = F(a[n])<F(n+5)? F(a[n]) : F(n+5);
+	return min+1;
+}
+int main()
+{
+	
+	scanf("%d",&N);
+	for(int i=1;i<=N;i++)
+		scanf("%d",&a[i]);
+	int x=2*F(1);
+	printf("%d\n",x);
+}
+
+
+
+
+HRY and Abbas
+题目描述 
+In a parallel universe, HRY is the president of the Kassel Academy Student Union. Once he and the Lionheart Association President Abdullah Abbas performed a secret mission: to investigate the mixed blood drug trafficking group in country X. 
+
+However, an accident happened and they were caught together. They were forced to play Russian gambling roulette games!
+
+The terrorists brought a revolver which works as follows: a revolver has n places 1,2,...,n to place bullet, and these n places forms a circle. The revolver has a position it is currently pointing at, and when pulling the trigger, the revolver will shoot out the bullet (if it has) at the current position and turn to the next position. The next position of 1 \leq i \leq n-11≤i≤n−1 is i+1, and for n the next position is 1. Now the terrorist puts m bullets in the revolver, and turned the wheel of the revolver, which means the starting position is randomly chosen. He orders HRY and Abbas shoot at their heads in turn using the same revolver. If someone is hit by bullet, then the game is over. 
+
+HRY and Abbas are both not ordinary mixed blood, so the revolver can do no harm to them. However, they still decided to play the game. Now they want to know the probability of the game ending exactly after the ith shoot.
+
+输入描述:
+The first line is an integer T, indicating the number of test cases. 
+For each test case there are two lines :
+The first line contains two integers n,m, and the second line contains m different positive integers a_ia 
+i
+​	
+ , indicating the initial positions of bullets.
+1 \leq T \leq 1000, 1 \leq m \leq n \leq 10^5, 1 \leq a_i \leq n.1≤T≤1000,1≤m≤n≤10 
+5
+ ,1≤a 
+i
+​	
+ ≤n.
+The sum of n does not exceed 10^610 
+6
+ .
+输出描述:
+For each test case output n lines, the ith line indicates the probability of game ending exactly after the ith shoot. The probability is in the form of irreducible fraction p/q, which means the greatest common divisor of p and q is 1. If the answer is 0, output 0 directly.
+示例1
+输入
+复制
+2
+10 2
+1 3
+10 4
+1 2 6 10
+输出
+复制
+1/5
+1/5
+1/10
+1/10
+1/10
+1/10
+1/10
+1/10
+0
+0
+2/5
+1/5
+1/5
+1/5
+0
+0
+0
+0
+0
+0
+
+
+AC代码
+#include <bits/stdc++.h>
+using namespace std;
+bool a[100005];
+int b[100005];
+int main() {
+    int t;
+    scanf("%d", &t);
+    int n, m;
+    while (t--) {
+        memset(a, 0, sizeof(a));
+        memset(b, 0, sizeof(b));
+ 
+        scanf("%d%d", &n, &m);
+        int first;
+        for (int i = 1; i <= m; i++) {
+            int x;
+            scanf("%d", &x);
+            a[x] = true;
+            if (i == 1)
+                first = x;
+        }
+        int pos = first;
+        int pos2 = 1;
+        for (int i = 1; i <= n; i++) {
+            if (a[pos]) {
+                b[1]++;
+                pos2 = 1;
+            }
+            else {
+                pos2++;
+                b[pos2]++;
+            }
+            pos++;
+            if (pos == n+1)
+                pos = 1;
+        }
+        for (int i = 1; i <= n; i++) {
+            int k = __gcd(b[i], n);
+            if (b[i] != 0)
+                printf("%d/%d\n", b[i]/k, n/k);
+            else
+                printf("0\n");
+        }
+    }
+    return 0;
+}
