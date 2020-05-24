@@ -1,0 +1,286 @@
+西安邮电大学第五届ACM-ICPC校赛（同步赛）
+拯救咕咕咕之史莱姆
+题目描述 
+信鸽王国有一位美丽的公主，被可恶的巫师囚禁在了城堡里，你是一位倾慕公主的勇者，准备去解救她。你来到了城堡外，发现有一只丑陋的史莱姆阻挡了你的去路，向你索要进堡费，你囊中羞涩，并不想给钱，于是你给它撒了“洞洞索命粉末”！
+洞洞索命粉末：被撒此粉末它的身上就会出现一个大洞，从中毒的第二天开始，大洞每天早上会分裂出一个小洞，小洞在出现后的第四天会长成大洞（并开始分裂），每个洞在每天下午会减少它 3 点 HP，HP 为 0 时它就会死去。史莱姆很聪明，如果他意识到自己第二天就会死去，他就会向你求饶，让开道路。
+PS：你从小道消息得知公主就快要饿死了，所以你要赶在 5 天之内进入城堡，如果 5 天之后史莱姆还没有向你求饶，那你只能氪金了。
+输入描述:
+测试输入包含若干测试用例，每个测试用例占一行，包含一个整数 n（long long范围内），表示史莱姆的初始 HP 值，当 n 为 0 时输入结束。
+输出描述:
+对每个测试用例，如果 5 天之内（包括第 5 天）史莱姆向你求饶，那就输出“AOLIGEI!”，否则，输出“DAAAAAMN!”，没有双引号。
+示例1
+输入
+复制
+5
+73
+77
+0
+输出
+复制
+AOLIGEI!
+AOLIGEI!
+DAAAAAMN!
+
+AC代码
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn = 1e6+5, mod = 1e9+7;
+
+int main() {
+    ll n;
+    while(cin >> n){
+        if(n == 0) break;
+        if(n <= 75) cout << "AOLIGEI!" << endl;
+        else cout << "DAAAAAMN!" << endl;
+    }
+}
+
+无敌阿姨
+
+题目描述 
+X 学校最近计划安排宿管阿姨帮每个宿舍的人晒被子，为了提高效率雇佣了一个无敌阿姨，已知无敌阿姨晒被子的方式如下：
+1、进入当前有被子的最低层拿尽可能多的被子，每拿走 1 床被子体力值减 1；
+2、如果当前层的被子被拿完且此时的体力值大于 k ，消耗 k 点体力值进入到上层楼；
+3、在当前层拿尽可能多的被子，每拿走 1 床被子体力值减 1 ，重复步骤 2；
+4、如果体力耗尽或者此时的体力小于等于 k ，将被子拿出去放到晾衣架，体力恢复为初始体力值；
+PS：阿姨在没有取得被子之前上楼不消耗体力。
+先给出楼的层数 n ，阿姨的体力值 m ，阿姨抱着被子上楼的体力消耗值 k ，每层的被子数 a_ia 
+i
+​	
+  ，问阿姨需要几次能够把所有被子拿出去？
+输入描述:
+输入包含多组数据，第一行包含一个数字 T(1 \le T \le 10)T(1≤T≤10)，表示测试数据组数。接下来是T组数据，
+每组数据第一行为三个整数 n,m,k(1 \le n,m,k \le 100)n,m,k(1≤n,m,k≤100)分别表示楼的层数，阿姨的体力值以及抱着被子上楼的体力消耗值。
+第二行 n 个整数 a_1,a_2,a_3,...,a_n(1 \le a_i \le 100)a 
+1
+​	
+ ,a 
+2
+​	
+ ,a 
+3
+​	
+ ,...,a 
+n
+​	
+ (1≤a 
+i
+​	
+ ≤100) 表示每层的被子数。
+输出描述:
+每组数据输出包含一个整数，表示阿姨把所有的被子都拿出去需要的次数。
+示例1
+输入
+复制
+1
+4 5 1
+1 1 2 4
+输出
+复制
+3
+说明
+第一次阿姨先从第一层拿一床被子，再上到第二层拿1床被子，再上到第三层拿一床被子，其中拿被子消耗体力为3，上楼消耗体力为2；第二次阿姨先从第三层拿一床被子，再上到第四层拿三床被子，其中拿被子消耗体力为4，上楼消耗体力为1；第三次阿姨直接从第四层拿一床被子消耗体力为1，全部为拿被子消耗的体力。
+
+
+AC代码
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn = 1e5+5;
+int main() {
+    int t; cin >> t;
+    int n,m,k;
+    int a[105];
+    while (t--) {
+        cin >> n >> m >> k;
+        int now = m;
+        int ans = 0;
+        for(int i = 1; i <= n; i++){
+            cin >> a[i];
+        }
+        for(int i = 1; i <= n; i++){
+            if(now > a[i] + k && i < n){//拿完进入下一层
+                now = now - a[i] - k;
+                //cout << "a";
+            }
+            else if((now >= a[i] && now <= a[i]+ k) || (now > a[i] + k && i == n)){//拿完回去晾
+                now = m;
+                ans++;
+                //cout << "b";
+            }
+            else {//拿不完
+                a[i] = a[i] - now;
+                now = m;
+                ans++;
+                i--;
+                //cout <<"??" <<a[i] <<"??"<<"c";
+            }
+        }
+        cout << ans << endl;
+    }
+    return 0;
+}
+
+校车
+
+题目描述 
+西安邮电大学有一辆从老校区到新校区的校车，总共有 n 个学生乘坐校车，在 a_{i}a 
+i
+​	
+  站上车，在 b_{i}b 
+i
+​	
+  站下车。学校打算去除一部分不必要的站点，请问需要保留多少站点，需要安排多少个座位？
+输入描述:
+输入 T 组数据 (1 \le T \le 10)(1≤T≤10)
+输入 n(1 \le n \le 10^{5})n(1≤n≤10 
+5
+ )
+输入 n 组 a_{i},b_{i}(1 \le a_{i}，b_{i} \le 10^{9})a 
+i
+​	
+ ,b 
+i
+​	
+ (1≤a 
+i
+​	
+ ，b 
+i
+​	
+ ≤10 
+9
+ )
+输出描述:
+输出保留站点数，座位数。
+示例1
+输入
+复制
+1
+3
+1 2
+1 3
+2 4
+输出
+复制
+4 2
+
+
+AC代码
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn = 1e5+5;
+int a[maxn],b[maxn];
+map<int,int> s;
+int main() {
+    int t; cin >> t;
+    while (t--) {
+        memset(a,0,sizeof(a));
+        memset(b,0,sizeof(b));
+        s.clear();
+        int n; cin >> n;
+        set<int> se;
+        se.clear();
+        for (int i = 1; i <= n; ++i) {
+            cin >> a[i] >> b[i];
+            se.insert(a[i]);
+            se.insert(b[i]);
+        }
+        sort(a+1, a+1+n);
+        sort(b+1, b+1+n);
+        int ans = 0;
+        for (int i = 1; i <= n; ++i) {
+            s[a[i]]++;
+            s[b[i]]--;
+        }
+        int MAX = 0,num = 0;
+        for(map<int,int>::iterator iter = s.begin(); iter != s.end(); ++iter){
+            num = num + iter->second;
+            MAX = num>MAX?num:MAX;
+            //cout << iter->second << endl;
+        }
+        cout << se.size() << " " << MAX << endl;
+    }
+    return 0;
+}
+
+
+中位因数
+题目描述 
+给出函数的定义如下：
+f(x)是所有能够整除 x 的数（包含 1 和 x ）中的中位数向下取整的大小,
+g(x)=\sum_{i = 1}^{x}{f(i)}g(x)=∑ 
+i=1
+x
+​	
+ f(i)
+输入描述:
+输入包含多组数据，第一行为一个数字 T(1 \le T \le 10)T(1≤T≤10) ，表示测试数据组数。
+接下来是 T 组数据，每组数据为一行，包含一个整数 x(1 \le x \le1000000)x(1≤x≤1000000)
+输出描述:
+每组数据输出包含一个整数，表示 g(x) 的值，结果要求对 1e9+7 取模。
+
+示例1
+输入
+复制
+3
+1
+2
+3
+输出
+复制
+1
+2
+4
+说明
+能够整除 1 的数字有 1 ，故 f(1)=1；
+能够整除 2 的数字有 1，2 所以中位数为\lfloor \frac{1+2}{2} \rfloor = 1⌊ 
+2
+1+2
+​	
+ ⌋=1，故 f(2) = 1；
+能够整除 3 的数字有 1,3 ，所以中位数为\frac{1+3}{2}=2 
+2
+1+3
+​	
+ =2 ，故 f(3) = 2；
+从而得出 g(1) = 1,g(2) = 2,g(3) = 4 。
+示例2
+输入
+复制
+1
+1000000
+输出
+复制
+677045223
+
+AC代码
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn = 1e6+5, mod = 1e9+7;
+int f[maxn], g[maxn];
+void init() {
+    f[1] = g[1] = 1;
+    for (int i = 2; i <= 1000000; ++i) {
+        f[i] = min(f[i], (1+i)/2);
+        for (int j = i+i; j <= 1000000; j += i) {
+            f[j] = min(f[j], (i + j/i)/2);
+        }
+        g[i] = (g[i-1]+f[i])%mod;
+    }
+}
+int main() {
+    memset(f,0x3f3f3f3f,sizeof(f));
+    //freopen("in.txt","r",stdin);
+    init();
+    int t; scanf("%d",&t);
+    while (t--) {
+        int x; scanf("%d",&x);
+        printf("%d\n",g[x]);
+    }
+    return 0;
+}
