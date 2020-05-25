@@ -1,0 +1,113 @@
+数字比较
+
+题目描述 
+牛牛很喜欢对数字进行比较，但是对于3 > 2这种非常睿智的比较不感兴趣。上了高中之后，学习了数字的幂，他十分喜欢这种数字表示方法，比如xy。
+由此，他想出了一种十分奇妙的数字比较方法，给出两个数字x和y，请你比较x的y次幂和y的x次幂的大小，如果前者大于后者，输出">"，小于则输出"<"，等于则输出"="。
+
+输入描述:
+两个数字x和y。
+
+满足1 <= x,y <= 109
+
+输出描述:
+一个字符，">"，"<"或者"="。
+示例1
+输入
+复制
+2 2
+输出
+复制
+=
+示例2
+输入
+复制
+2 4
+输出
+复制
+=
+AC代码
+
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn = 1e6+5, mod = 1e9+7;
+int main(){
+    int x, y;
+    scanf("%d %d",&x,&y);
+    double a = x * log(y);
+    double b = y * log(x);
+    if(a > b){
+        cout << "<" <<endl;
+    }
+    else if(a < b){
+        cout << ">" << endl;
+    }
+    else cout << "=" << endl;
+}
+
+序列最小化
+
+题目描述 
+有一个长度为N的序列。一开始，这个序列是1, 2, 3,... n - 1, n的一个排列。
+
+对这个序列，可以进行如下的操作：
+
+每次选择序列中k个连续的数字，然后用这k个数字中最小的数字替换这k个数字中的每个数字。
+
+我们希望进行了若干次操作后，序列中的每个数字都相等。请你找出需要操作的最少次数。
+
+输入描述:
+第一行：两个数字n, k，含义如题，满足2 <= k <= n <= 105；
+
+第二行：n个数字，是1, 2, 3,...n的一个排列。
+
+输出描述:
+一个整数，表示最少的次数。
+示例1
+输入
+复制
+2 2
+2 1
+输出
+复制
+1
+示例2
+输入
+复制
+4 3
+1 2 3 4
+输出
+复制
+2
+AC代码
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn = 1e6+5, mod = 1e9+7;
+int a[1000];
+int main(){
+    int n, m;
+    while(cin >> n >> m){
+        for(int i = 0; i < n; i++){
+            scanf("%d",&a);
+        }
+        if(m == 1){
+            printf("%d\n",n-1);
+        }
+        else{
+            n = n-m;
+            int cnt = 1;
+            int ans = 0,sum = 0;
+            ans=n / (m - 1);
+            sum=n % (m - 1);
+            cnt += ans;
+            if(sum != 0){
+                cnt++;
+            }
+            else{
+            }
+            printf("%d\n",cnt);
+        }
+    }
+    return 0;
+}
