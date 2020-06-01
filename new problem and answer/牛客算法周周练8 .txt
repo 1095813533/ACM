@@ -1,0 +1,117 @@
+地址：https://ac.nowcoder.com/acm/contest/5803
+A.小A买彩票
+题目描述 
+小A最近开始沉迷买彩票，并且希望能够通过买彩票发家致富。已知购买一张彩票需要3元，而彩票中奖的金额分别为1,2,3,4元，并且比较独特的是这个彩票中奖的各种金额都是等可能的。现在小A连续购买了n张彩票，他希望你能够告诉他至少能够不亏本的概率是多少。
+输入描述:
+一行一个整数N，为小A购买的彩票数量一行一个整数N，为小A购买的彩票数量
+输出描述:
+输出一个最简分数a/b，表示小A不亏本的概率。
+\\若概率为1，则输出1/1，概率为0，则输出0/1。输出一个最简分数a/b，表示小A不亏本的概率。
+若概率为1，则输出1/1，概率为0，则输出0/1。
+示例1
+输入
+复制
+2
+输出
+复制
+3/8
+备注:
+0≤n≤30
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn = 505;
+const ll mod = 998244353;
+ll a[maxn][maxn];
+ll r[maxn];
+ll c[maxn];
+const int inf=0x3f3f3f3f;
+const int N=2e5+10;
+ll dp[50][150];
+int main()
+{
+    int m,n,q;
+    cin>>n;
+    dp[0][0]=1;
+    for(int i = 1; i <= n; i++){
+        for(int j = 1; j <= 4 * i; j++){
+            for(int k = 1; k <= 4; k++){
+                if(j >= k) dp[i][j] += dp[i-1][j-k];
+            }
+        }
+    }
+    ll ans=0;
+    for(int i = 3 * n; i <= 4 * n; i++) ans += dp[n][i];
+    //cout<<ans<<endl;
+    ll tot=pow(4,n);
+    int k=__gcd(ans,tot);
+    ans/=k;
+    tot/=k;
+    cout<<ans<<'/'<<tot;
+}
+```
+B.「金」点石成金
+
+题目描述 
+赛时提示：魔法值和财富值初始为0
+
+帕秋莉掌握了一种金属性魔法
+她决定去捡一些石头，施展点石成金魔法
+
+帕秋莉将捡到的n块石头排成一排，并决定将一些石头点为黄金
+
+对于第i块石头，如果将其变为黄金，会增加ai的财富，消耗bi的魔法（需要说明的是，就算魔法值不够，也可以操作，操作后魔法值归零）
+
+否则，帕秋莉将会回复ci的魔法，但减少di的财富（财富值同理，可以无限制减少）
+
+帕秋莉想知道，按照1-n的顺序以此操作每块石头，如何决策，可以使自己最后的收益值最大
+只需要输出最大收益
+收益值=财富值*魔法值
+
+（提示：数值不会变为负数，即任何时候，如果数值小于了0，它会立即变为0）
+
+输入描述:
+第一行一个整数n
+接下来n行，每行四个数，分别代表对应石头的a,b,c,d值
+输出描述:
+一个整数表示答案
+示例1
+输入
+复制
+2
+1926 817 2003 627
+1949 1001 1234 4321
+输出
+复制
+1952898
+备注:
+对于20%的数据，1≤n≤2
+对于100%的数据，1≤n≤15，0≤ai,bi,ci,di≤1,000,000
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn = 20;
+ll a[maxn], b[maxn], c[maxn], d[maxn];
+ll ans = 0;
+int n;
+void dfs(int cur, ll mf, ll cf) {
+    if (cur == n+1) {
+        ans = max(ans,mf*cf);
+        return;
+    }
+    dfs(cur+1,max(0ll,mf-b[cur]),cf+a[cur]);
+    dfs(cur+1,mf+c[cur],max(0ll,cf-d[cur]));
+}
+int main() {
+    cin >> n;
+    for (int i = 1; i <= n; ++i) {
+        cin >> a[i] >> b[i] >> c[i] >> d[i];
+    }
+    dfs(1,0,0);
+    cout << ans << endl;
+    return 0;
+}
+```
