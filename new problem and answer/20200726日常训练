@@ -1,0 +1,80 @@
+https://codeforces.com/contest/1168/problem/C
+
+# C. And Reachability<br>
+Toad Pimple has an array of integers a1,a2,…,an.<br>
+We say that y is reachable from x if x<y and there exists an integer array p such that x=p1<p2<…<pk=y, and api&api+1>0 for all integers i such that 1≤i<k.<br>
+Here & denotes the bitwise AND operation.<br>
+You are given q pairs of indices, check reachability for each of them.<br>
+Input<br>
+The first line contains two integers n and q (2≤n≤300000, 1≤q≤300000) — the number of integers in the array and the number of queries you need to answer.<br>
+The second line contains n space-separated integers a1,a2,…,an (0≤ai≤300000) — the given array.<br>
+The next q lines contain two integers each. The i-th of them contains two space-separated integers xi and yi (1≤xi<yi≤n). You need to check if yi is reachable from xi.<br>
+
+Output<br>
+Output q lines. In the i-th of them print "Shi" if yi is reachable from xi, otherwise, print "Fou".<br>
+
+Example<br>
+input<br>
+```
+5 3
+1 3 0 2 1
+1 3
+2 4
+1 4
+```
+output<br>
+```
+Fou
+Shi
+Shi
+```
+Note<br>
+In the first example, a3=0. You can't reach it, because AND with it is always zero. a2&a4>0, so 4 is reachable from 2, and to go from 1 to 4 you can use p=[1,2,4].<br>
+
+
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int mod = 1e9 + 7;
+typedef long double ld;
+const int D = 21;
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    int n, q;
+    cin >> n >> q;
+    vector<int> a(n);
+    for(int &x : a) cin >> x;
+    vector<vector<int>> nxt(n, vector<int>(D, n));
+    vector<int> lst(D, n);
+
+    for(int i = n - 1; i >= 0; i--) {
+        for(int bit = 0; bit < D; bit++) {
+            if ((1 << bit) & a[i]) {
+                int pos = lst[bit];
+                nxt[i][bit] = min(nxt[i][bit], pos);
+                for(int o_bit = 0; o_bit < D; o_bit++) {
+                    if(pos < n) nxt[i][o_bit] = min(nxt[i][o_bit], nxt[pos][o_bit]);
+                }
+                lst[bit] = i;
+            }
+        }
+    }
+    while(q--) {
+        int x, y;
+        cin >> x >> y;
+        x--, y--;
+        bool ok = false;
+        for(int bit = 0; bit < D; bit++) {
+            if ((1 << bit) & a[y]) {
+                ok |= (nxt[x][bit] <= y);
+            }
+        }
+        ok ? cout << "Shi\n" : cout << "Fou\n";
+    }
+    return 0;
+}
+
+```
