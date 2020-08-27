@@ -1,0 +1,47 @@
+# manacher算法
+题目描述<br>
+给出一个只由小写英文字符a,b,c...y,z组成的字符串S,求S中最长回文串的长度.<br>
+
+字符串长度为n<br>
+
+输入格式<br>
+一行小写英文字符a,b,c...y,z组成的字符串S<br>
+
+输出格式<br>
+一个整数表示答案<br>
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+const int maxn = 11000005;
+int n, len, ans;
+int r[maxn*2];
+char tmp[maxn], s[maxn*2];
+
+void init() {
+	scanf("%s", tmp+1);
+	n = strlen(tmp+1);
+	s[0] = '%';
+	for(int i = 1; i <= n; i++) {
+		s[++len] = '#';
+		s[++len] = tmp[i];
+	}
+	s[++len] = '#', s[len+1] = '$';
+	return;
+}
+void manacher() {
+	int mx = 0, mid = 0;
+	for (int i = 1; i <= len; i++) {
+		if (i <= mx) r[i] = min(r[(mid*2)-i],mx-i);
+		while (s[i+r[i]+1] == s[i-r[i]-1]) ++r[i];
+		if (r[i]+i > mx) mx = i+r[i], mid = i;
+		if (r[i] > ans) ans = r[i];
+	}
+	return;
+}
+int main() {
+	init();
+	manacher();
+	printf("%d\n",ans);
+	return 0;
+}
+```
