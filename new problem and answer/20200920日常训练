@@ -1,0 +1,66 @@
+最长上升子序列LIS
+题目描述
+输入一个序列长度，求里面最长上升子序列的长度
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+const int maxn = 1e5+5;
+int a[maxn];
+int main() {
+    int n;
+    while (~scanf("%d",&n)) {
+        for (int i = 1; i <= n; ++i) scanf("%d",&a[i]);
+        vector<int> ve;
+        ve.push_back(a[1]);
+        for (int i = 2; i <= n; ++i) {
+            if (ve[ve.size()-1] < a[i]) {
+                // 如果新进来的数比最后一个数大，那么直接插入
+                ve.push_back(a[i]);
+            }
+            else {
+                ve[lower_bound(ve.begin(),ve.end(),a[i])-ve.begin()] = a[i];
+            }
+        }
+        printf("%d\n",ve.size());
+    }
+    return 0;
+}
+```
+最长公共子序列
+题目描述
+给出1-n的两个排列P1和P2，求它们的最长公共子序列。
+
+输入格式
+第一行是一个数n，
+
+接下来两行，每行为n个数，为自然数1-n的一个排列。
+
+输出格式
+一个数，即最长公共子序列的长度
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+const int maxn = 1e5+5;
+int id[maxn];
+vector<int> ve;
+int main() {
+    int n; scanf("%d",&n);
+    for (int i = 1; i <= n; ++i) {
+        int x; scanf("%d",&x);
+        id[x] = i;
+    }
+    for (int i = 1; i <= n; ++i) {
+        int x; scanf("%d",&x);
+        x = id[x];
+        if (i == 1) ve.push_back(x);
+        else {
+            if (x > ve[ve.size()-1]) ve.push_back(x);
+            else {
+                ve[lower_bound(ve.begin(),ve.end(),x)-ve.begin()] = x;
+            }
+        }
+    }
+    printf("%d",ve.size());
+    return 0;
+}
+```
